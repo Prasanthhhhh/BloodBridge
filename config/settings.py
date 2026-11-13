@@ -1,4 +1,5 @@
 
+
 """
 Django settings for config project.
 """
@@ -9,14 +10,14 @@ from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load environment variables from .env
+# Load environment variables
 load_dotenv(BASE_DIR / '.env')
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com']
 
 
 INSTALLED_APPS = [
@@ -96,9 +97,6 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 LOGIN_URL = '/login/'
-
-
