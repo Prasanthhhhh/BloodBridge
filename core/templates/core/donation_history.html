@@ -1,0 +1,180 @@
+
+{% extends 'core/base.html' %}
+
+{% block title %}Donation History | BloodBridge{% endblock %}
+
+{% block extra_head %}
+<style>
+    .history-container {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    .history-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .history-header h1 {
+        color: #c62828;
+        margin-bottom: 10px;
+    }
+
+    .history-stats {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+
+    .history-stat {
+        flex: 1;
+        min-width: 180px;
+        padding: 22px;
+        background: #fff;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+
+    .history-stat h2 {
+        color: #c62828;
+        margin-bottom: 8px;
+    }
+
+    .donation-card {
+        background: #fff;
+        padding: 22px;
+        margin-bottom: 18px;
+        border-radius: 12px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+
+    .donation-card h3 {
+        color: #c62828;
+        margin-bottom: 12px;
+    }
+
+    .donation-card p {
+        margin: 8px 0;
+    }
+
+    .empty-history {
+        text-align: center;
+        padding: 35px;
+        background: #fff;
+        border-radius: 12px;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-top: 20px;
+        color: #c62828;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .back-link:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+        .history-container {
+            margin: 20px auto;
+            padding: 12px;
+        }
+
+        .history-stat {
+            min-width: 100%;
+        }
+
+        .donation-card {
+            padding: 17px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="history-container">
+
+    <div class="history-header">
+        <h1>🩸 Donation History</h1>
+        <p>Your previous blood donation records</p>
+        <p>Donor: {{ donor.full_name|default:donor.user.username }}</p>
+    </div>
+
+    <div class="history-stats">
+
+        <div class="history-stat">
+            <h2>{{ total_donations }}</h2>
+            <p>Total Donations</p>
+        </div>
+
+        <div class="history-stat">
+            <h2>{{ total_units }}</h2>
+            <p>Total Units Donated</p>
+        </div>
+
+    </div>
+
+    <h2>Previous Donations</h2>
+
+    {% if donations %}
+
+        {% for donation in donations %}
+
+            <div class="donation-card">
+
+                <h3>{{ donation.blood_group }} Donation</h3>
+
+                <p>
+                    <strong>Hospital:</strong>
+                    {{ donation.hospital_name }}
+                </p>
+
+                <p>
+                    <strong>City:</strong>
+                    {{ donation.city }}
+                </p>
+
+                <p>
+                    <strong>Units Donated:</strong>
+                    {{ donation.units_donated }}
+                </p>
+
+                <p>
+                    <strong>Donation Date:</strong>
+                    {{ donation.donation_date|date:"d M Y" }}
+                </p>
+
+                {% if donation.notes %}
+                    <p>
+                        <strong>Notes:</strong>
+                        {{ donation.notes }}
+                    </p>
+                {% endif %}
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="empty-history">
+            <h3>No Donation History Found</h3>
+            <p>Your previous donation records will appear here.</p>
+        </div>
+
+    {% endif %}
+
+    <a href="{% url 'search_donors' %}" class="back-link">
+        ← Back to Home
+    </a>
+
+</div>
+
+{% endblock %}
+

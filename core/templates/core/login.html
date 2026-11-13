@@ -1,0 +1,284 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Login | BloodBridge</title>
+    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #fff5f6, #fff);
+            color: #252536;
+        }
+
+        .login-header {
+            padding: 22px 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            border-bottom: 1px solid #f3e3e6;
+        }
+
+        .login-brand {
+            color: #c51f42;
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .login-tagline {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .login-page {
+            min-height: calc(100vh - 100px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 35px 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 460px;
+        }
+
+        .login-card {
+            background: #fff;
+            padding: 38px 35px;
+            border: 1px solid #f5e5e8;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(145, 30, 55, 0.09);
+        }
+
+        .login-icon {
+            width: 65px;
+            height: 65px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 18px;
+            background: #ffe8ed;
+            border-radius: 20px;
+            font-size: 30px;
+        }
+
+        .login-container h1 {
+            text-align: center;
+            margin: 0 0 10px;
+            color: #a81737;
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+        .login-description {
+            text-align: center;
+            color: #777;
+            margin: 0 0 30px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .login-form {
+            width: 100%;
+        }
+
+        .login-form .form-group {
+            width: 100%;
+            margin-bottom: 22px;
+        }
+
+        .login-form label {
+            display: block;
+            margin-bottom: 9px;
+            color: #393947;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .login-form input {
+            display: block;
+            width: 100%;
+            padding: 14px 15px;
+            border: 1px solid #e5dadd;
+            border-radius: 10px;
+            background: #fff;
+            color: #252536;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .login-form input:focus {
+            border-color: #c51f42;
+            box-shadow: 0 0 0 3px rgba(197, 31, 66, 0.1);
+        }
+
+        .login-form input::placeholder {
+            color: #a99ba0;
+        }
+
+        .login-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-top: 8px;
+            border: none;
+            border-radius: 11px;
+            background: #c51f42;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .login-button:hover {
+            background: #991b35;
+            transform: translateY(-1px);
+        }
+
+        .registration-link {
+            text-align: center;
+            margin: 25px 0 0;
+            color: #777;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .registration-link a {
+            color: #c51f42;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .registration-link a:hover {
+            text-decoration: underline;
+        }
+
+        .registration-message {
+            padding: 12px 14px;
+            margin-bottom: 18px;
+            border-radius: 10px;
+            background: #fff0f3;
+            color: #a81737;
+            text-align: center;
+            overflow-wrap: anywhere;
+            font-size: 14px;
+        }
+
+        .login-footer {
+            text-align: center;
+            padding: 18px;
+            color: #888;
+            font-size: 13px;
+        }
+
+        @media (max-width: 480px) {
+            .login-header {
+                padding: 18px 5%;
+                flex-direction: column;
+                gap: 7px;
+            }
+
+            .login-page {
+                padding: 25px 15px;
+            }
+
+            .login-card {
+                padding: 30px 22px;
+                border-radius: 16px;
+            }
+
+            .login-container h1 {
+                font-size: 27px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="login-header">
+        <div class="login-brand">🩸 BloodBridge</div>
+        <div class="login-tagline">Find a donor. Help save a life.</div>
+    </header>
+
+    <main class="login-page">
+        <section class="login-container">
+            <div class="login-card">
+
+                <div class="login-icon">🔐</div>
+
+                <h1>Welcome Back</h1>
+                <p class="login-description">
+                    Login to your BloodBridge donor account.
+                </p>
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <p class="registration-message">
+                            {{ message }}
+                        </p>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="POST" class="login-form">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Enter your username"
+                            autocomplete="username"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="login-button">
+                        Login to Account
+                    </button>
+                </form>
+
+                <p class="registration-link">
+                    Don't have an account?
+                    <a href="{% url 'register_donor' %}">Register here</a>
+                </p>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="login-footer">
+        BloodBridge — Every donor can make a difference.
+    </footer>
+
+</body>
+</html>
+

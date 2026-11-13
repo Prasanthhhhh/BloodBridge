@@ -1,0 +1,274 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Registration | BloodBridge</title>
+    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #fff5f6, #fff);
+            color: #252536;
+        }
+
+        .register-header {
+            padding: 22px 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            border-bottom: 1px solid #f3e3e6;
+        }
+
+        .brand {
+            color: #c51f42;
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .header-tagline {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .register-wrapper {
+            width: 100%;
+            max-width: 650px;
+            margin: 45px auto;
+            padding: 0 20px;
+        }
+
+        .register-intro {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .register-icon {
+            width: 65px;
+            height: 65px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffe8ed;
+            border-radius: 20px;
+            font-size: 30px;
+            margin-bottom: 14px;
+        }
+
+        .register-intro h1 {
+            margin: 0 0 10px;
+            font-size: 32px;
+            color: #a81737;
+        }
+
+        .register-intro p {
+            color: #777;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .register-card {
+            background: #fff;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(145, 30, 55, 0.09);
+            border: 1px solid #f5e5e8;
+        }
+
+        .card-heading {
+            margin: 0 0 25px;
+            font-size: 21px;
+            color: #252536;
+        }
+
+        .registration-form p {
+            margin: 0 0 20px;
+        }
+
+        .registration-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #393947;
+        }
+
+        .registration-form input,
+        .registration-form select,
+        .registration-form textarea {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #e5dadd;
+            border-radius: 10px;
+            outline: none;
+            background: #fff;
+            color: #252536;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .registration-form input:focus,
+        .registration-form select:focus,
+        .registration-form textarea:focus {
+            border-color: #c51f42;
+            box-shadow: 0 0 0 3px rgba(197, 31, 66, 0.1);
+        }
+
+        .registration-form ul {
+            color: #c51f42;
+            font-size: 13px;
+            padding-left: 20px;
+        }
+
+        .field-error,
+        .errorlist {
+            color: #c51f42;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .registration-message {
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            background: #fff0f3;
+            color: #a81737;
+            font-size: 14px;
+        }
+
+        .register-button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 11px;
+            background: #c51f42;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 5px;
+        }
+
+        .register-button:hover {
+            background: #991b35;
+            transform: translateY(-1px);
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 22px;
+            color: #c51f42;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .register-footer {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            .register-header {
+                padding: 18px 5%;
+                flex-direction: column;
+                gap: 7px;
+            }
+
+            .register-wrapper {
+                margin: 30px auto;
+            }
+
+            .register-card {
+                padding: 24px 20px;
+            }
+
+            .register-intro h1 {
+                font-size: 27px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="register-header">
+        <div class="brand">🩸 BloodBridge</div>
+        <div class="header-tagline">Find a donor. Help save a life.</div>
+    </header>
+
+    <main class="register-wrapper">
+
+        <section class="register-intro">
+            <div class="register-icon">🩸</div>
+            <h1>Become a Blood Donor</h1>
+            <p>Your one registration could help save someone's life.</p>
+        </section>
+
+        <section class="register-card">
+            <h2 class="card-heading">Donor Registration</h2>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="registration-message">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" class="registration-form">
+                {% csrf_token %}
+
+                {% for field in form %}
+                    <p>
+                        {{ field.label_tag }}
+                        {{ field }}
+
+                        {% if field.help_text %}
+                            <small>{{ field.help_text }}</small>
+                        {% endif %}
+
+                        {% for error in field.errors %}
+                            <div class="field-error">{{ error }}</div>
+                        {% endfor %}
+                    </p>
+                {% endfor %}
+
+                <button type="submit" class="register-button">
+                    Register as Donor
+                </button>
+            </form>
+
+            <a href="{% url 'search_donors' %}" class="back-link">
+                ← Back to Home
+            </a>
+        </section>
+
+    </main>
+
+    <footer class="register-footer">
+        BloodBridge — Every donor can make a difference.
+    </footer>
+
+</body>
+</html>
+
+

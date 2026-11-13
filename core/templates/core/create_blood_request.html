@@ -1,0 +1,152 @@
+
+{% extends 'core/base.html' %}
+
+{% block title %}Request Blood | BloodBridge{% endblock %}
+
+{% block extra_head %}
+<style>
+    .request-container {
+        width: 100%;
+        max-width: 650px;
+        margin: 30px auto;
+        padding: 32px;
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
+    }
+
+    .request-container h2 {
+        color: #c62828;
+        margin-bottom: 10px;
+        font-size: 28px;
+    }
+
+    .request-container > p {
+        line-height: 1.6;
+        margin-bottom: 25px;
+    }
+
+    .request-container form p {
+        margin-bottom: 18px;
+    }
+
+    .request-container form label {
+        display: block;
+        margin-bottom: 7px;
+        font-weight: 600;
+    }
+
+    .request-container input,
+    .request-container select,
+    .request-container textarea {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        padding: 12px;
+        margin-top: 6px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+
+    .request-container textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .request-container button {
+        width: 100%;
+        background: #c62828;
+        color: white;
+        border: none;
+        padding: 14px 20px;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .request-container button:hover {
+        background: #a91f1f;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-top: 20px;
+        text-decoration: none;
+    }
+
+    .back-link:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+        .request-container {
+            max-width: 580px;
+            padding: 28px;
+            margin: 20px auto;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .request-container {
+            margin: 12px auto;
+            padding: 22px 17px;
+            border-radius: 10px;
+        }
+
+        .request-container h2 {
+            font-size: 24px;
+        }
+
+        .request-container > p {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .request-container form p {
+            margin-bottom: 16px;
+        }
+
+        .request-container input,
+        .request-container select,
+        .request-container textarea {
+            padding: 12px;
+            font-size: 16px;
+        }
+
+        .request-container button {
+            padding: 13px;
+        }
+
+        .back-link {
+            font-size: 14px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="request-container">
+
+    <h2>Request Blood</h2>
+
+    <p>
+        Enter the details below to submit a blood request.
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">
+            Submit Blood Request
+        </button>
+    </form>
+
+    <a class="back-link" href="{% url 'search_donors' %}">
+        ← Back to BloodBridge
+    </a>
+
+</div>
+{% endblock %}

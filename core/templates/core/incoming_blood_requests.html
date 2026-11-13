@@ -1,0 +1,413 @@
+
+{% extends 'core/base.html' %}
+
+{% block title %}Incoming Blood Requests | BloodBridge{% endblock %}
+
+{% block extra_head %}
+<style>
+    .incoming-container {
+        width: 100%;
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    .incoming-heading {
+        margin-bottom: 8px;
+        color: #b91c1c;
+        font-size: 30px;
+    }
+
+    .incoming-description {
+        color: #666;
+        margin-bottom: 25px;
+        line-height: 1.6;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #b91c1c;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .back-link:hover {
+        text-decoration: underline;
+    }
+
+    /* Request grid */
+    .request-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+        gap: 20px;
+    }
+
+    .request-card {
+        min-width: 0;
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 14px;
+        padding: 22px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .request-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.09);
+    }
+
+    /* Emergency request highlight */
+    .request-card.emergency-card {
+        background: #fff1f2;
+        border: 2px solid #dc2626;
+        box-shadow: 0 4px 16px rgba(220, 38, 38, 0.14);
+    }
+
+    .request-card.urgent-card {
+        background: #fffbeb;
+        border: 2px solid #f59e0b;
+    }
+
+    .blood-badge {
+        display: inline-block;
+        background: #fee2e2;
+        color: #b91c1c;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 8px 13px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+    }
+
+    .urgency {
+        display: inline-block;
+        margin-left: 8px;
+        padding: 5px 9px;
+        border-radius: 6px;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .urgency-normal {
+        background: #e5e7eb;
+        color: #374151;
+    }
+
+    .urgency-urgent {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .urgency-emergency {
+        background: #dc2626;
+        color: white;
+    }
+
+    .request-card h2 {
+        font-size: 21px;
+        margin: 12px 0;
+        overflow-wrap: anywhere;
+    }
+
+    .request-info {
+        margin: 10px 0;
+        line-height: 1.7;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .request-info strong {
+        color: #333;
+    }
+
+    .request-info > div {
+        margin-bottom: 5px;
+    }
+
+    /* Accept and Reject buttons */
+    .request-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 18px;
+        align-items: stretch;
+    }
+
+    .request-actions form {
+        flex: 1;
+        min-width: 0;
+        margin: 0;
+    }
+
+    .request-actions button {
+        width: 100%;
+        min-height: 44px;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 10px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .accept-button {
+        background: #b91c1c;
+        color: white;
+    }
+
+    .accept-button:hover {
+        background: #991b1b;
+    }
+
+    .reject-btn {
+        background: #6b7280;
+        color: white;
+    }
+
+    .reject-btn:hover {
+        background: #4b5563;
+    }
+
+    /* Empty state */
+    .empty-state {
+        background: white;
+        border: 1px dashed #ccc;
+        border-radius: 12px;
+        padding: 35px 20px;
+        text-align: center;
+    }
+
+    .empty-state h2 {
+        color: #374151;
+        font-size: 22px;
+    }
+
+    .empty-state p {
+        color: #666;
+        line-height: 1.6;
+    }
+
+    /* Tablet */
+    @media (max-width: 768px) {
+        .incoming-container {
+            margin: 25px auto;
+            padding: 18px;
+        }
+
+        .incoming-heading {
+            font-size: 27px;
+        }
+
+        .request-grid {
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+            gap: 16px;
+        }
+
+        .request-card {
+            padding: 20px;
+        }
+    }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+        .incoming-container {
+            margin: 18px auto;
+            padding: 14px;
+        }
+
+        .incoming-heading {
+            font-size: 24px;
+        }
+
+        .incoming-description {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .request-grid {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .request-card {
+            padding: 18px;
+            border-radius: 12px;
+        }
+
+        .request-card h2 {
+            font-size: 19px;
+        }
+
+        .request-info {
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .request-actions {
+            gap: 8px;
+        }
+
+        .request-actions button {
+            font-size: 13px;
+            padding: 12px 6px;
+        }
+
+        .empty-state {
+            padding: 28px 16px;
+        }
+
+        .empty-state h2 {
+            font-size: 19px;
+        }
+    }
+
+    /* Very small mobile screens */
+    @media (max-width: 360px) {
+        .request-card {
+            padding: 15px;
+        }
+
+        .request-actions {
+            flex-direction: column;
+        }
+
+        .request-actions form {
+            width: 100%;
+        }
+
+        .request-actions button {
+            font-size: 14px;
+        }
+
+        .urgency {
+            margin-left: 4px;
+            font-size: 11px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<main class="incoming-container">
+
+    <a href="{% url 'search_donors' %}" class="back-link">
+        ← Back to Donor Search
+    </a>
+
+    <h1 class="incoming-heading">Incoming Blood Requests</h1>
+
+    <p class="incoming-description">
+        Requests matching your blood group and city are shown here.
+    </p>
+
+    {% if incoming_requests %}
+
+        <div class="request-grid">
+
+            {% for blood_request in incoming_requests %}
+
+                <article class="request-card {% if blood_request.urgency == 'emergency' %}emergency-card{% elif blood_request.urgency == 'urgent' %}urgent-card{% endif %}">
+
+                    <div class="blood-badge">
+                        {{ blood_request.blood_group }}
+                    </div>
+
+                    <span class="urgency urgency-{{ blood_request.urgency }}">
+                        {{ blood_request.get_urgency_display }}
+                    </span>
+
+                    <h2>{{ blood_request.patient_name }}</h2>
+
+                    <div class="request-info">
+
+                        <div>
+                            <strong>City:</strong>
+                            {{ blood_request.city }}
+                        </div>
+
+                        <div>
+                            <strong>Hospital:</strong>
+                            {{ blood_request.hospital_name }}
+                        </div>
+
+                        <div>
+                            <strong>Units needed:</strong>
+                            {{ blood_request.units_needed }}
+                        </div>
+
+                        <div>
+                            <strong>Contact:</strong>
+                            {{ blood_request.contact_phone }}
+                        </div>
+
+                        <div>
+                            <strong>Requested by:</strong>
+                            {{ blood_request.requester.username }}
+                        </div>
+
+                        <div>
+                            <strong>Date:</strong>
+                            {{ blood_request.created_at|date:"d M Y, h:i A" }}
+                        </div>
+
+                        {% if blood_request.details %}
+                            <div>
+                                <strong>Additional details:</strong>
+                                {{ blood_request.details }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+                    <div class="request-actions">
+
+                        <form
+                            method="post"
+                            action="{% url 'accept_blood_request' blood_request.id %}"
+                        >
+                            {% csrf_token %}
+
+                            <button type="submit" class="accept-button">
+                                Accept Request
+                            </button>
+                        </form>
+
+                        <form
+                            method="post"
+                            action="{% url 'reject_blood_request' blood_request.id %}"
+                        >
+                            {% csrf_token %}
+
+                            <button type="submit" class="reject-btn">
+                                Reject Request
+                            </button>
+                        </form>
+
+                    </div>
+
+                </article>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state">
+            <h2>No matching requests right now</h2>
+
+            <p>
+                New requests matching your blood group and city
+                will appear here.
+            </p>
+        </div>
+
+    {% endif %}
+
+</main>
+
+{% endblock %}

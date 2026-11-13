@@ -1,0 +1,243 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Donor Availability | BloodBridge{% endblock %}
+
+{% block content %}
+<div class="availability-page">
+
+    <div class="availability-card">
+
+        <div class="availability-icon">🩸</div>
+
+        <span class="availability-eyebrow">BLOODBRIDGE</span>
+
+        <h1>Donor Availability</h1>
+
+        <p class="availability-subtitle">
+            Your availability can help someone get the blood they need.
+            Keep your donation status up to date.
+        </p>
+
+        <div class="availability-status-box">
+            <span class="availability-label">YOUR CURRENT STATUS</span>
+
+            {% if donor.is_available %}
+                <div class="availability-status available">
+                    <span class="status-indicator"></span>
+                    Available to Donate
+                </div>
+
+                <p class="availability-description">
+                    You are marked as available to donate blood.
+                    Thank you for being ready to help.
+                </p>
+            {% else %}
+                <div class="availability-status unavailable">
+                    <span class="status-indicator"></span>
+                    Not Available
+                </div>
+
+                <p class="availability-description">
+                    You are currently unavailable to donate.
+                    Update your status whenever you are ready.
+                </p>
+            {% endif %}
+        </div>
+
+        <form method="POST" action="{% url 'update_availability' %}">
+            {% csrf_token %}
+
+            <button type="submit" class="availability-button">
+                {% if donor.is_available %}
+                    Mark as Not Available
+                {% else %}
+                    Mark as Available
+                {% endif %}
+                <span aria-hidden="true"> →</span>
+            </button>
+        </form>
+
+        <div class="availability-note">
+            <span>❤️</span>
+            <p>One small act of kindness can make a big difference.</p>
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+.availability-page {
+    min-height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 45px 16px;
+    box-sizing: border-box;
+}
+
+.availability-card {
+    width: 100%;
+    max-width: 490px;
+    padding: 38px;
+    box-sizing: border-box;
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid #f0dfe2;
+    border-radius: 22px;
+    box-shadow: 0 12px 40px rgba(112, 24, 43, 0.10);
+}
+
+.availability-icon {
+    width: 76px;
+    height: 76px;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff0f2;
+    border-radius: 22px;
+    font-size: 38px;
+}
+
+.availability-eyebrow {
+    color: #c6283d;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 3px;
+}
+
+.availability-card h1 {
+    margin: 12px 0;
+    color: #29232a;
+    font-size: 29px;
+    line-height: 1.3;
+}
+
+.availability-subtitle {
+    margin: 0 auto 28px;
+    max-width: 360px;
+    color: #77717a;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.availability-status-box {
+    padding: 23px 20px;
+    margin-bottom: 24px;
+    text-align: left;
+    background: #fff8f8;
+    border: 1px solid #f4e2e5;
+    border-radius: 15px;
+}
+
+.availability-label {
+    display: block;
+    margin-bottom: 16px;
+    color: #77717a;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+}
+
+.availability-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 19px;
+    font-weight: 750;
+}
+
+.availability-status.available {
+    color: #16834a;
+}
+
+.availability-status.unavailable {
+    color: #c6283d;
+}
+
+.status-indicator {
+    width: 11px;
+    height: 11px;
+    flex-shrink: 0;
+    background: currentColor;
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(198, 40, 61, 0.09);
+}
+
+.availability-status.available .status-indicator {
+    box-shadow: 0 0 0 4px rgba(22, 131, 74, 0.10);
+}
+
+.availability-description {
+    margin: 13px 0 0;
+    color: #77717a;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.availability-button {
+    width: 100%;
+    min-height: 53px;
+    padding: 14px 20px;
+    color: #ffffff;
+    background: linear-gradient(135deg, #c6283d, #a91630);
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.availability-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 18px rgba(198, 40, 61, 0.23);
+}
+
+.availability-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #f1e8e9;
+}
+
+.availability-note span {
+    font-size: 17px;
+}
+
+.availability-note p {
+    margin: 0;
+    color: #77717a;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+@media (max-width: 480px) {
+    .availability-page {
+        padding: 25px 12px;
+    }
+
+    .availability-card {
+        padding: 27px 20px;
+        border-radius: 18px;
+    }
+
+    .availability-card h1 {
+        font-size: 25px;
+    }
+
+    .availability-status-box {
+        padding: 19px 15px;
+    }
+
+    .availability-status {
+        font-size: 17px;
+    }
+}
+</style>
+{% endblock %}
+

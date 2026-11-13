@@ -1,0 +1,339 @@
+
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Volunteer Dashboard | BloodBridge{% endblock %}
+
+{% block content %}
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .volunteer-dashboard {
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 35px 20px;
+    }
+
+    .dashboard-welcome {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 30px;
+        padding: 25px;
+        border-radius: 16px;
+        flex-wrap: wrap;
+    }
+
+    .welcome-icon {
+        font-size: 48px;
+        flex-shrink: 0;
+    }
+
+    .welcome-label {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+    }
+
+    .dashboard-welcome h1 {
+        font-size: 30px;
+        margin: 8px 0;
+        overflow-wrap: anywhere;
+    }
+
+    .welcome-description {
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .volunteer-dashboard-card {
+        width: 100%;
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 32px;
+        border-radius: 16px;
+    }
+
+    .dashboard-card-heading {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .profile-icon {
+        font-size: 32px;
+        flex-shrink: 0;
+    }
+
+    .dashboard-card-heading h2 {
+        margin: 0 0 6px;
+    }
+
+    .dashboard-card-heading p {
+        margin: 0;
+    }
+
+    .dashboard-info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        padding: 17px 0;
+        border-bottom: 1px solid #eeeeee;
+        flex-wrap: wrap;
+    }
+
+    .info-label {
+        font-weight: 600;
+    }
+
+    .info-value {
+        overflow-wrap: anywhere;
+        text-align: right;
+    }
+
+    .status-active {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .status-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: #16a34a;
+    }
+
+    .volunteer-message {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        margin: 28px 0;
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .message-icon {
+        font-size: 25px;
+        flex-shrink: 0;
+    }
+
+    .volunteer-message h3 {
+        margin: 0 0 8px;
+    }
+
+    .volunteer-message p {
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    .dashboard-logout-btn {
+        width: 100%;
+        padding: 14px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .dashboard-footer-note {
+        text-align: center;
+        margin-top: 28px;
+        line-height: 1.6;
+    }
+
+    /* Tablet */
+    @media (max-width: 768px) {
+        .volunteer-dashboard {
+            padding: 25px 18px;
+        }
+
+        .dashboard-welcome {
+            padding: 22px;
+        }
+
+        .dashboard-welcome h1 {
+            font-size: 26px;
+        }
+
+        .volunteer-dashboard-card {
+            padding: 28px;
+        }
+    }
+
+    /* Mobile */
+    @media (max-width: 480px) {
+        .volunteer-dashboard {
+            padding: 18px 12px;
+        }
+
+        .dashboard-welcome {
+            gap: 12px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .welcome-icon {
+            font-size: 35px;
+        }
+
+        .welcome-label {
+            font-size: 10px;
+        }
+
+        .dashboard-welcome h1 {
+            font-size: 22px;
+        }
+
+        .welcome-description {
+            font-size: 14px;
+        }
+
+        .volunteer-dashboard-card {
+            padding: 21px 17px;
+            border-radius: 12px;
+        }
+
+        .dashboard-card-heading {
+            gap: 10px;
+        }
+
+        .dashboard-card-heading h2 {
+            font-size: 20px;
+        }
+
+        .dashboard-card-heading p {
+            font-size: 13px;
+        }
+
+        .profile-icon {
+            font-size: 27px;
+        }
+
+        .dashboard-info-row {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 7px;
+            padding: 14px 0;
+        }
+
+        .info-value {
+            text-align: left;
+        }
+
+        .volunteer-message {
+            gap: 10px;
+            padding: 15px;
+            margin: 22px 0;
+        }
+
+        .volunteer-message h3 {
+            font-size: 17px;
+        }
+
+        .volunteer-message p {
+            font-size: 13px;
+        }
+
+        .dashboard-logout-btn {
+            padding: 13px;
+        }
+
+        .dashboard-footer-note {
+            font-size: 13px;
+        }
+    }
+</style>
+
+<section class="volunteer-dashboard">
+
+    <div class="dashboard-welcome">
+
+        <div class="welcome-icon">🩸</div>
+
+        <div>
+            <p class="welcome-label">BLOODBRIDGE VOLUNTEER</p>
+
+            <h1>Welcome, {{ request.user.username }}!</h1>
+
+            <p class="welcome-description">
+                Your time and care can help save lives.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="volunteer-dashboard-card">
+
+        <div class="dashboard-card-heading">
+
+            <div class="profile-icon">👤</div>
+
+            <div>
+                <h2>Your Dashboard</h2>
+                <p>Your volunteer account details</p>
+            </div>
+
+        </div>
+
+        <div class="dashboard-info-row">
+
+            <span class="info-label">Username</span>
+
+            <span class="info-value">
+                {{ request.user.username }}
+            </span>
+
+        </div>
+
+        <div class="dashboard-info-row">
+
+            <span class="info-label">Account status</span>
+
+            <span class="status-active">
+                <span class="status-dot"></span>
+                Active
+            </span>
+
+        </div>
+
+        <div class="volunteer-message">
+
+            <span class="message-icon">❤️</span>
+
+            <div>
+                <h3>Be someone's reason to smile</h3>
+
+                <p>
+                    Thank you for supporting our mission to connect
+                    blood donors with people in need.
+                </p>
+            </div>
+
+        </div>
+
+        <form method="POST" action="{% url 'donor_logout' %}">
+
+            {% csrf_token %}
+
+            <button type="submit" class="dashboard-logout-btn">
+                Logout <span aria-hidden="true">→</span>
+            </button>
+
+        </form>
+
+    </div>
+
+    <p class="dashboard-footer-note">
+        Every drop counts. Every volunteer matters.
+    </p>
+
+</section>
+
+{% endblock %}
+
+

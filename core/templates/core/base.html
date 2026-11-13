@@ -1,0 +1,101 @@
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BloodBridge | Find Blood Donors{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="{% block body_class %}bb-home{% endblock %}">
+
+<header class="bb-header">
+    <a href="{% url 'search_donors' %}" class="bb-brand">
+        <span class="bb-brand-icon">🩸</span>
+        <span>
+            <strong>BloodBridge</strong>
+            <small>Find a donor. Help save a life.</small>
+        </span>
+    </a>
+
+    <button class="bb-menu-toggle" type="button"
+            aria-label="Toggle navigation"
+            aria-expanded="false"
+            aria-controls="bb-navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <nav class="bb-navigation" id="bb-navigation">
+        <a href="{% url 'search_donors' %}" class="bb-nav-link">Home</a>
+        <a href="{% url 'search_donors' %}#donor-search" class="bb-nav-link">Find Donors</a>
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'create_blood_request' %}" class="bb-nav-link">Request Blood</a>
+            <a href="{% url 'my_blood_requests' %}" class="bb-nav-link">My Requests</a>
+            <a href="{% url 'incoming_blood_requests' %}" class="bb-nav-link">Incoming Requests</a>
+            <a href="{% url 'donation_history' %}" class="bb-nav-link">Donation History</a>
+            <a href="{% url 'edit_profile' %}" class="bb-nav-link">Edit Profile</a>
+            <a href="{% url 'register_volunteer' %}" class="bb-nav-link">Volunteer</a>
+            <a href="{% url 'volunteer_dashboard' %}" class="bb-nav-link">Volunteer Dashboard</a>
+        {% endif %}
+    </nav>
+
+    <div class="bb-account">
+        {% if user.is_authenticated %}
+            <span class="bb-welcome">Hi, {{ user.username }}</span>
+            <form method="POST" action="{% url 'donor_logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="bb-account-button">Logout</button>
+            </form>
+        {% else %}
+            <a href="{% url 'donor_login' %}" class="bb-login-link">Login</a>
+            <a href="{% url 'register_donor' %}" class="bb-register-link">Register</a>
+        {% endif %}
+    </div>
+</header>
+
+{% if messages %}
+    <div class="site-messages">
+        {% for message in messages %}
+            <p class="message {{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% block content %}{% endblock %}
+
+{% block extra_scripts %}{% endblock %}
+
+<script>
+    const menuToggle = document.querySelector(".bb-menu-toggle");
+    const navigation = document.querySelector(".bb-navigation");
+
+    if (menuToggle && navigation) {
+        menuToggle.addEventListener("click", function () {
+            const isOpen = navigation.classList.toggle("bb-navigation-open");
+            menuToggle.setAttribute("aria-expanded", isOpen);
+        });
+
+        navigation.querySelectorAll("a").forEach(function (link) {
+            link.addEventListener("click", function () {
+                navigation.classList.remove("bb-navigation-open");
+                menuToggle.setAttribute("aria-expanded", "false");
+            });
+        });
+    }
+</script>
+
+</body>
+</html>
+
+
+
+
+
+

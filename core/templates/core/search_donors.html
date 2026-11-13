@@ -1,0 +1,249 @@
+
+{% extends 'core/base.html' %}
+
+{% block title %}BloodBridge | Find Blood Donors{% endblock %}
+
+{% block content %}
+
+<main>
+    <section class="bb-hero">
+        <div class="bb-hero-content">
+            <span class="bb-eyebrow">GIVE BLOOD. GIVE HOPE.</span>
+
+            <h1>
+                Every Drop Counts.<br>
+                <span>Every Donor Matters.</span>
+            </h1>
+
+            <p>
+                Find blood donors around you, request blood when you need it,
+                and become someone’s reason to hope.
+            </p>
+
+            <div class="bb-hero-actions">
+                <a href="#donor-search" class="bb-primary-button">I Need Blood</a>
+
+                {% if user.is_authenticated %}
+                    <a href="{% url 'edit_profile' %}" class="bb-secondary-button">
+                        I Want to Donate
+                    </a>
+                {% else %}
+                    <a href="{% url 'register_donor' %}" class="bb-secondary-button">
+                        I Want to Donate
+                    </a>
+                {% endif %}
+            </div>
+
+            <div class="bb-hero-note">
+                <span>♥</span> Connecting donors and people in need.
+            </div>
+        </div>
+
+        <div class="bb-hero-visual" aria-hidden="true">
+            <div class="bb-heart-circle">
+                <span>♥</span>
+            </div>
+
+            <div class="bb-visual-card bb-visual-card-top">
+                <strong>Be a lifesaver</strong>
+                <small>Your donation matters</small>
+            </div>
+
+            <div class="bb-visual-card bb-visual-card-bottom">
+                <strong>One donation</strong>
+                <small>Can make a difference</small>
+            </div>
+        </div>
+    </section>
+
+    <section class="bb-stats-section" aria-label="BloodBridge statistics">
+        <div class="bb-stat-card">
+            <span class="bb-stat-icon">👥</span>
+            <div>
+                <p>Total Donors</p>
+                <h2>{{ total_donors }}</h2>
+            </div>
+        </div>
+
+        <div class="bb-stat-card">
+            <span class="bb-stat-icon">🩸</span>
+            <div>
+                <p>Available Donors</p>
+                <h2>{{ available_donors }}</h2>
+            </div>
+        </div>
+
+        <div class="bb-stat-card">
+            <span class="bb-stat-icon">⏳</span>
+            <div>
+                <p>Pending Requests</p>
+                <h2>{{ pending_requests }}</h2>
+            </div>
+        </div>
+
+        <div class="bb-stat-card">
+            <span class="bb-stat-icon">✓</span>
+            <div>
+                <p>Completed Requests</p>
+                <h2>{{ completed_requests }}</h2>
+            </div>
+        </div>
+    </section>
+
+    <section class="bb-search-section" id="donor-search">
+        <div class="bb-section-heading">
+            <span class="bb-eyebrow">FIND YOUR MATCH</span>
+            <h2>Search Blood Donors</h2>
+            <p>Choose a blood group and enter a city to find donors.</p>
+        </div>
+
+        <form method="GET" class="bb-search-form">
+            <div class="bb-form-group">
+                <label for="blood_group">Blood Group</label>
+
+                <select name="blood_group" id="blood_group">
+                    <option value="">All Blood Groups</option>
+
+                    {% for group in blood_groups %}
+                        <option value="{{ group.0 }}"
+                            {% if selected_blood_group == group.0 %}selected{% endif %}>
+                            {{ group.1 }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="bb-form-group">
+                <label for="city">City</label>
+
+                <input
+                    type="text"
+                    name="city"
+                    id="city"
+                    value="{{ city|default:'' }}"
+                    placeholder="Enter city name">
+            </div>
+
+            <div class="bb-form-group">
+                <label for="availability">Availability</label>
+
+                <select name="availability" id="availability">
+                    <option value="available"
+                        {% if availability == 'available' %}selected{% endif %}>
+                        Available
+                    </option>
+
+                    <option value="unavailable"
+                        {% if availability == 'unavailable' %}selected{% endif %}>
+                        Not Available
+                    </option>
+
+                    <option value="all"
+                        {% if availability == 'all' %}selected{% endif %}>
+                        All Donors
+                    </option>
+                </select>
+            </div>
+
+            <button type="submit" class="bb-search-button">
+                Search Donors
+            </button>
+        </form>
+    </section>
+
+    <section class="bb-results-section">
+        <div class="bb-section-heading bb-results-heading">
+            <div>
+                <span class="bb-eyebrow">DONOR DIRECTORY</span>
+
+                <h2>
+                    {% if availability == 'unavailable' %}
+                        Not Available Donors
+                    {% elif availability == 'all' %}
+                        All Donors
+                    {% else %}
+                        Available Donors
+                    {% endif %}
+                </h2>
+            </div>
+        </div>
+
+        <div class="bb-donor-grid">
+            {% for donor in donors %}
+                <article class="bb-donor-card">
+                    <div class="bb-blood-badge">
+                        {{ donor.blood_group }}
+                    </div>
+
+                    <div class="bb-donor-details">
+                        <h3>{{ donor.full_name|default:donor.user.username }}</h3>
+
+                        <p>
+                            <strong>Blood Group:</strong>
+                            {{ donor.blood_group }}
+                        </p>
+
+                        <p>
+                            <strong>City:</strong>
+                            {{ donor.city }}
+                        </p>
+
+                        <p>
+                            <strong>Phone:</strong>
+                            {{ donor.phone }}
+                        </p>
+
+                        {% if user.is_authenticated and user.id == donor.user_id %}
+                            <p class="bb-donor-status">
+                                <strong>Status:</strong>
+
+                                {% if donor.is_available %}
+                                    <span class="bb-status-available">Available</span>
+                                {% else %}
+                                    <span class="bb-status-unavailable">Not Available</span>
+                                {% endif %}
+                            </p>
+
+                            <form method="POST" action="{% url 'update_availability' %}">
+                                {% csrf_token %}
+
+                                <button type="submit" class="bb-availability-button">
+                                    {% if donor.is_available %}
+                                        Mark as Not Available
+                                    {% else %}
+                                        Mark as Available
+                                    {% endif %}
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </article>
+
+            {% empty %}
+                <div class="bb-empty-state">
+                    <span>🩸</span>
+                    <h3>No donors found</h3>
+                    <p>Try another blood group, city or availability filter.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+
+<footer class="bb-footer">
+    <strong>🩸 BloodBridge</strong>
+    <p>Every donor can make a difference.</p>
+    <small>Made to connect people and save lives.</small>
+</footer>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
