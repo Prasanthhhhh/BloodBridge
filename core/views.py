@@ -1,5 +1,4 @@
 
-
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -55,9 +54,6 @@ def search_donors(request):
     else:
         donors = DonorProfile.objects.all()
         availability = 'all'
-
-    if request.user.is_authenticated:
-        donors = donors | DonorProfile.objects.filter(user=request.user)
 
     if blood_group:
         donors = donors.filter(blood_group=blood_group)
@@ -576,6 +572,7 @@ def complete_blood_request(request, request_id):
         )
 
     return redirect('my_blood_requests')
+
 
 
 
